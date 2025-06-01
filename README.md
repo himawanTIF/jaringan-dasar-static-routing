@@ -1,7 +1,11 @@
 # jaringan-dasar-static-routing
 Panduan Jaringan Dasar - Static Routing dengan Cisco Packet Tracer
 
+# Static Routing
+![Gambar Excalidraw](Static-Routing-Excalidraw.png)
 
+# Cisco Packet Tracer Topology
+![Gambar Cisco Packet Tracer](Static-Routing-Cisco-Packet-Tracer.png)
 
 # Addressing Table
 

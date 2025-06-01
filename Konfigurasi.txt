@@ -1,0 +1,60 @@
+--------------------------
+Static Routing
+--------------------------
+Addressing (Pengalamatan)
+1. Router 1 
+ - Gig0/0	: 10.10.10.1/29 255.255.255.248
+ - Gig0/1	: 192.168.100.6/29 255.255.248
+2. Router 2
+ - Gig0/0	: 10.10.10.2/29 255.255.255.248
+ - Gig0/1	: 192.168.200.6/29 255.255.255.248 
+3. Switch 1 	: N/A
+4. Switch 2 	: N/A
+5. PC 1
+ - Fa0		: 192.168.100.1/29 255.255.255.248 192.168.100.6
+6. PC 2
+ - Fa0		: 192.168.200.1/29 255.255.255.248 192.168.200.6
+--------------------
+Konfigurasi
+1. Router 1 (R1)
+ a. Masuk ke Privilege Mode dari User Mode
+  - Router> enable (alias: en)
+ b. Masuk ke Global Configuration Mode dari Privilege Mode
+  - Router# config terminal (alias: conf t)
+ c. Ubah Hostname/nama device
+  - Router(config)# hostname R1
+ d. Disable domain-lookup untuk mencegah router mencoba resolve DNS ketika salah ketik perintah
+  - R1(config)# no ip domain-lookup
+ e. Setting IP address untuk interface Gig0/0
+  - R1(config)# int gig0/0
+  - R1(config-if)# description Connection to R2
+  - R1(config-if)# ip address 10.10.10.1 255.255.255.248 (alias: ip add)
+  - R1(config-if)# no shutdown (aktifkan/up interface)
+  - R1(config-if)# exit
+ f. Setting IP address untuk interface Gig0/1
+  - R1(config)# int gig0/1
+  - R1(config-if)# description Connection to PC2
+  - R1(config-if)# ip address 192.168.100.6 255.255.255.248
+  - R1(config-if)# no shutdown
+  - R1(config-if)# exit
+ g. Routing Router dengan next-hop ip address atau exit-interface (lakukan salah satu saja)
+ - Dengan next-hop ip add: ip route <net-destination> <submask net-destination> <next-hop ip add>
+ - R1(config)# ip route 192.168.200.0 255.255.255.248 10.10.10.1
+ - Dengan exit-interface: ip route <net-destination> submask net-destination> <exit-int>
+ - R1(config)# ip route 192.168.200.0 255.255.255.248 gig0/0
+ - R1# show ip route (cek apakah sudah berhasil melakukan static routing)
+ h. Simpan konfigurasi yang sedang berjalan ke startup-configuration agar tidak hilang saat device reboot
+  - R1# copy running-config startup-config (alias: copy run start)
+	atau
+  - R1# write memory (alias: write)
+2. Router 2 (R2)
+ - Lakukan konfigurasi seperti pada Router 1 (R1)
+3. PC 1 dan PC 2
+ - Lakukan konfigurasi IP Address sesuai addressing
+------------
+Pengujian
+1. Lakukan pengujian dari Router
+ - Lakukan ping dari R1 ke R2 dan sebaliknya untuk semua IP
+2. Lakukan pengujian dari PC
+ - Lakukan ping dari PC 1 ke PC 2 dan sebaliknya
+ - Lakukan trace route dari PC 1 ke PC 2 dan sebaliknya
